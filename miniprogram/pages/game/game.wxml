@@ -47,7 +47,7 @@
       class="path-indicator" 
       wx:for="{{pathIndicators}}" 
       wx:key="index"
-      style="top: {{(item.x + 6.2) * 64 + 32}}rpx; left: {{(item.y + 0.9) * 64 + 32}}rpx;"
+      style="top: {{(item.x + 1.7) * 64 + 32}}rpx; left: {{(item.y + 0.9) * 64 + 32}}rpx;"
     ></view>
   </view>
 

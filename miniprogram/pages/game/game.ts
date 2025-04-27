@@ -251,9 +251,9 @@ Page({
     this.setData({
       showMovingAnimation: true,
       movingBall: {
-        fromX: path[0].x + 6.2, // 起点坐标，向下增加7个网格距离
+        fromX: path[0].x + 1.7, // 起点坐标，向下增加7个网格距离
         fromY: path[0].y + 0.9, // 起点坐标，向右增加1个网格距离
-        toX: path[0].x + 6.2,
+        toX: path[0].x + 1.7,
         toY: path[0].y + 0.9,
         color: ballColor
       }
@@ -267,9 +267,9 @@ Page({
         // 设置移动动画到下一个点
         this.setData({
           movingBall: {
-            fromX: pathPoints[currentStepIndex].x + 6.2, // 向下偏移7格
+            fromX: pathPoints[currentStepIndex].x + 1.7, // 向下偏移7格
             fromY: pathPoints[currentStepIndex].y + 0.9, // 向右偏移1格
-            toX: pathPoints[currentStepIndex].x + 6.2,
+            toX: pathPoints[currentStepIndex].x + 1.7,
             toY: pathPoints[currentStepIndex].y + 0.9,
             color: ballColor
           }
