@@ -15,7 +15,7 @@
   <view class="game-grid">
     <view class="grid-row" wx:for="{{grid}}" wx:for-item="row" wx:for-index="rowIndex" wx:key="rowIndex">
       <view 
-        class="grid-cell {{selectedBall.x === rowIndex && selectedBall.y === colIndex ? 'selected' : ''}}" 
+        class="grid-cell {{selectedBall.x === rowIndex && selectedBall.y === colIndex ? 'selected' : ''}} {{pathBlocked && pathBlockedPos.x === rowIndex && pathBlockedPos.y === colIndex ? 'blocked' : ''}}" 
         wx:for="{{row}}" 
         wx:for-item="cell" 
         wx:for-index="colIndex" 
@@ -24,9 +24,36 @@
         data-row="{{rowIndex}}"
         data-col="{{colIndex}}"
       >
-        <view class="ball" wx:if="{{cell.color}}" style="background-color: {{cell.color}}"></view>
+        <view 
+          class="ball {{selectedBall.x === rowIndex && selectedBall.y === colIndex ? 'bouncing' : ''}}" 
+          wx:if="{{cell.color}}" 
+          style="background-color: {{cell.color}}"
+        ></view>
       </view>
     </view>
+  </view>
+
+  <!-- 移动动画层 -->
+  <view class="moving-ball-container" wx:if="{{showMovingAnimation}}">
+    <view 
+      class="moving-ball" 
+      style="top: {{movingBall.fromX * 64 + 32}}rpx; left: {{movingBall.fromY * 64 + 32}}rpx; background-color: {{movingBall.color}}; transform: translate(-50%, -50%);"
+    ></view>
+  </view>
+
+  <!-- 路径指示点 -->
+  <view class="path-indicator-container" wx:if="{{showPathIndicators}}">
+    <view 
+      class="path-indicator" 
+      wx:for="{{pathIndicators}}" 
+      wx:key="index"
+      style="top: {{(item.x + 6.2) * 64 + 32}}rpx; left: {{(item.y + 0.9) * 64 + 32}}rpx;"
+    ></view>
+  </view>
+
+  <!-- 无法移动提示 -->
+  <view class="path-blocked-msg" wx:if="{{pathBlocked}}">
+    <text>无法移动到此位置</text>
   </view>
 
   <view class="game-controls">

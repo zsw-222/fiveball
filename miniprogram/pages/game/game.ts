@@ -11,6 +11,13 @@ interface GridCell {
   color: string;
 }
 
+// 路径节点类型
+interface PathNode {
+  x: number;
+  y: number;
+  path: Array<{x: number, y: number}>;
+}
+
 Page({
   data: {
     // 游戏相关数据
@@ -25,8 +32,14 @@ Page({
       '#FFC107', // 黄
       '#9C27B0'  // 紫
     ],
-    availableColors: [] as string[],  // 当前可用的颜色
-    gridSize: 15                      // 网格大小
+    availableColors: [] as string[],   // 当前可用的颜色
+    gridSize: 10,                      // 网格大小
+    showMovingAnimation: false,        // 是否显示移动动画
+    movingBall: { fromX: -1, fromY: -1, toX: -1, toY: -1, color: '' }, // 正在移动的球
+    pathBlocked: false,                // 是否无法移动到目标位置
+    pathBlockedPos: { x: -1, y: -1 },  // 无法移动到的位置
+    showPathIndicators: false,         // 是否显示路径指示点
+    pathIndicators: [] as Array<{x: number, y: number}> // 路径指示点
   },
 
   onLoad() {
@@ -63,7 +76,12 @@ Page({
       grid,
       score: 0,
       availableColors,
-      nextBalls
+      nextBalls,
+      selectedBall: { x: -1, y: -1 },
+      pathBlocked: false,
+      pathBlockedPos: { x: -1, y: -1 },
+      showPathIndicators: false,
+      pathIndicators: []
     });
   },
 
@@ -109,8 +127,19 @@ Page({
 
   // 处理单元格点击
   onCellTap(e: any) {
+    // 如果正在播放移动动画，不响应点击
+    if (this.data.showMovingAnimation) return;
+
     const { row, col } = e.currentTarget.dataset;
     const { grid, selectedBall } = this.data;
+    
+    // 清除路径阻塞提示
+    if (this.data.pathBlocked) {
+      this.setData({
+        pathBlocked: false,
+        pathBlockedPos: { x: -1, y: -1 }
+      });
+    }
     
     // 如果点击的是已有球
     if (grid[row][col].color) {
@@ -124,47 +153,169 @@ Page({
     // 如果已选中球，且点击的是空位置
     if (selectedBall.x !== -1 && selectedBall.y !== -1) {
       // 检查是否可以移动
-      if (this.canMove(selectedBall.x, selectedBall.y, row, col)) {
+      const pathResult = this.canMove(selectedBall.x, selectedBall.y, row, col);
+      if (pathResult) {
         // 移动球
-        this.moveBall(selectedBall.x, selectedBall.y, row, col);
+        this.moveBall(selectedBall.x, selectedBall.y, row, col, pathResult as Array<{x: number, y: number}>);
+      } else {
+        // 无法移动，显示提示
+        this.setData({
+          pathBlocked: true,
+          pathBlockedPos: { x: row, y: col }
+        });
+        
+        // 2秒后自动清除提示
+        setTimeout(() => {
+          this.setData({
+            pathBlocked: false,
+            pathBlockedPos: { x: -1, y: -1 }
+          });
+        }, 2000);
       }
     }
   },
 
   // 检查是否可以移动
-  canMove(fromX: number, fromY: number, toX: number, toY: number): boolean {
-    // 这里应该实现路径查找算法
-    // 简单实现：只能移动相邻的空位
-    const isAdjacent = (Math.abs(fromX - toX) === 1 && fromY === toY) || 
-                      (Math.abs(fromY - toY) === 1 && fromX === toX);
+  canMove(fromX: number, fromY: number, toX: number, toY: number): boolean | Array<{x: number, y: number}> {
+    const { grid, gridSize } = this.data;
     
-    // 简化版，假设可以移动
-    return true;
+    // 如果目标位置有球，不能移动
+    if (grid[toX][toY].color) return false;
+    
+    // 广度优先搜索寻找路径
+    const queue: PathNode[] = [{x: fromX, y: fromY, path: [{x: fromX, y: fromY}]}];
+    const visited = new Set<string>();
+    visited.add(`${fromX},${fromY}`);
+    
+    // 四个方向: 上、右、下、左
+    const directions = [[-1, 0], [0, 1], [1, 0], [0, -1]];
+    
+    while (queue.length > 0) {
+      const current = queue.shift()!;
+      const { x, y, path } = current;
+      
+      // 找到目标位置
+      if (x === toX && y === toY) {
+        return path; // 返回找到的路径
+      }
+      
+      // 检查四个方向
+      for (const [dx, dy] of directions) {
+        const nx = x + dx;
+        const ny = y + dy;
+        
+        // 检查是否在网格范围内
+        if (nx >= 0 && nx < gridSize && ny >= 0 && ny < gridSize) {
+          const key = `${nx},${ny}`;
+          
+          // 如果未访问过且该位置没有球
+          if (!visited.has(key) && !grid[nx][ny].color) {
+            visited.add(key);
+            queue.push({
+              x: nx, 
+              y: ny, 
+              path: [...path, {x: nx, y: ny}]
+            });
+          }
+        }
+      }
+    }
+    
+    // 没找到路径
+    return false;
   },
 
   // 移动球
-  moveBall(fromX: number, fromY: number, toX: number, toY: number) {
-    const { grid, nextBalls, availableColors } = this.data;
+  moveBall(fromX: number, fromY: number, toX: number, toY: number, path: Array<{x: number, y: number}>) {
+    const { grid } = this.data;
+    const ballColor = grid[fromX][fromY].color;
     
-    // 移动球
-    grid[toX][toY] = { color: grid[fromX][fromY].color };
+    // 清空原位置
     grid[fromX][fromY] = { color: '' };
     
-    // 取消选中
-    const selectedBall = { x: -1, y: -1 };
+    // 提取中间路径点（除起点外的所有点）
+    // 注意：path的第一个点是起点，最后一个点是终点
+    const pathPoints = path.slice(1);
     
-    this.setData({ grid, selectedBall });
+    // 显示路径指示点
+    this.setData({
+      showPathIndicators: true,
+      pathIndicators: pathPoints.slice(0, -1) // 不显示终点作为路径点
+    });
     
-    // 检查是否有连珠
-    const lines = this.checkLines(toX, toY);
+    // 计算动画时间
+    const totalSteps = pathPoints.length;
+    const stepDuration = 500 / totalSteps; // 总时长0.5秒
     
-    if (lines.length > 0) {
-      // 有连珠，消除并得分
-      this.eliminateLines(lines);
-    } else {
-      // 没有连珠，添加新球
-      this.addNewBalls();
-    }
+    // 设置起始位置（第一个路径点）
+    this.setData({
+      showMovingAnimation: true,
+      movingBall: {
+        fromX: path[0].x + 6.2, // 起点坐标，向下增加7个网格距离
+        fromY: path[0].y + 0.9, // 起点坐标，向右增加1个网格距离
+        toX: path[0].x + 6.2,
+        toY: path[0].y + 0.9,
+        color: ballColor
+      }
+    });
+    
+    // 执行路径动画
+    let currentStepIndex = 0;
+    
+    const moveToNextPoint = () => {
+      if (currentStepIndex < pathPoints.length) {
+        // 设置移动动画到下一个点
+        this.setData({
+          movingBall: {
+            fromX: pathPoints[currentStepIndex].x + 6.2, // 向下偏移7格
+            fromY: pathPoints[currentStepIndex].y + 0.9, // 向右偏移1格
+            toX: pathPoints[currentStepIndex].x + 6.2,
+            toY: pathPoints[currentStepIndex].y + 0.9,
+            color: ballColor
+          }
+        });
+        
+        currentStepIndex++;
+        
+        // 继续下一步移动
+        if (currentStepIndex < pathPoints.length) {
+          setTimeout(moveToNextPoint, stepDuration);
+        } else {
+          // 最后一步完成后结束动画
+          setTimeout(() => {
+            // 清除路径指示点和动画
+            this.setData({
+              showPathIndicators: false,
+              pathIndicators: [],
+              showMovingAnimation: false
+            });
+            
+            // 添加球到目标位置
+            grid[toX][toY] = { color: ballColor };
+            
+            // 取消选中
+            this.setData({ 
+              grid, 
+              selectedBall: { x: -1, y: -1 }
+            });
+            
+            // 检查是否有连珠
+            const lines = this.checkLines(toX, toY);
+            
+            if (lines.length > 0) {
+              // 有连珠，消除并得分
+              this.eliminateLines(lines);
+            } else {
+              // 没有连珠，添加新球
+              this.addNewBalls();
+            }
+          }, 100);
+        }
+      }
+    };
+    
+    // 开始动画序列
+    setTimeout(moveToNextPoint, 50);
   },
 
   // 检查连珠
