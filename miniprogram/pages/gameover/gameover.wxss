@@ -1,0 +1,63 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.8);
+  padding: 40rpx;
+}
+
+.gameover-title {
+  font-size: 72rpx;
+  color: #FFFFFF;
+  margin-bottom: 80rpx;
+  font-weight: bold;
+}
+
+.score-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 100rpx;
+}
+
+.score-label {
+  font-size: 40rpx;
+  color: #FFFFFF;
+  margin-bottom: 20rpx;
+}
+
+.final-score {
+  font-size: 96rpx;
+  color: #FFFFFF;
+  font-weight: bold;
+}
+
+.btn-container {
+  display: flex;
+  flex-direction: column;
+  width: 80%;
+}
+
+.btn {
+  width: 300rpx;
+  height: 100rpx;
+  line-height: 100rpx;
+  margin-bottom: 30rpx;
+  border-radius: 10rpx;
+  font-size: 36rpx;
+  color: #FFFFFF;
+}
+
+.restart-btn {
+  background-color: #4A90E2;
+}
+
+.home-btn {
+  background-color: #4CAF50;
+}
+
+.share-btn {
+  background-color: #FF5252;
+} 

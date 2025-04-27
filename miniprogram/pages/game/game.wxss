@@ -1,0 +1,113 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20rpx;
+  box-sizing: border-box;
+  height: 100vh;
+  background-color: #F5F5F5;
+}
+
+.game-header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10rpx 20rpx;
+  margin-bottom: 20rpx;
+}
+
+.score-container {
+  display: flex;
+  align-items: center;
+}
+
+.score-label {
+  font-size: 36rpx;
+  color: #333333;
+  margin-right: 10rpx;
+}
+
+.score {
+  font-size: 48rpx;
+  color: #333333;
+  font-weight: bold;
+}
+
+.next-balls {
+  display: flex;
+  align-items: center;
+}
+
+.next-label {
+  font-size: 28rpx;
+  color: #333333;
+  margin-right: 10rpx;
+}
+
+.next-balls-container {
+  display: flex;
+  align-items: center;
+}
+
+.preview-ball {
+  width: 40rpx;
+  height: 40rpx;
+  border-radius: 50%;
+  margin: 0 10rpx;
+}
+
+.game-grid {
+  width: 640rpx;
+  height: 640rpx;
+  background-color: #FFFFFF;
+  border: 2rpx solid #DDDDDD;
+  display: flex;
+  flex-direction: column;
+}
+
+.grid-row {
+  display: flex;
+  flex: 1;
+}
+
+.grid-cell {
+  flex: 1;
+  border: 1rpx solid #DDDDDD;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.grid-cell.selected {
+  background-color: rgba(255, 235, 59, 0.3);
+}
+
+.ball {
+  width: 80%;
+  height: 80%;
+  border-radius: 50%;
+  transition: transform 0.3s;
+}
+
+.selected .ball {
+  box-shadow: 0 0 8rpx 4rpx #FFEB3B;
+}
+
+.game-controls {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+  margin-top: 30rpx;
+}
+
+.control-btn {
+  width: 200rpx;
+  height: 80rpx;
+  line-height: 80rpx;
+  font-size: 32rpx;
+  color: #FFFFFF;
+  background-color: #4A90E2;
+  border-radius: 8rpx;
+} 

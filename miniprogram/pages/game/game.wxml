@@ -1,0 +1,36 @@
+<view class="container">
+  <view class="game-header">
+    <view class="score-container">
+      <text class="score-label">分数:</text>
+      <text class="score">{{score}}</text>
+    </view>
+    <view class="next-balls">
+      <text class="next-label">下一轮:</text>
+      <view class="next-balls-container">
+        <view class="preview-ball" wx:for="{{nextBalls}}" wx:key="index" style="background-color: {{item}}"></view>
+      </view>
+    </view>
+  </view>
+
+  <view class="game-grid">
+    <view class="grid-row" wx:for="{{grid}}" wx:for-item="row" wx:for-index="rowIndex" wx:key="rowIndex">
+      <view 
+        class="grid-cell {{selectedBall.x === rowIndex && selectedBall.y === colIndex ? 'selected' : ''}}" 
+        wx:for="{{row}}" 
+        wx:for-item="cell" 
+        wx:for-index="colIndex" 
+        wx:key="colIndex"
+        bindtap="onCellTap"
+        data-row="{{rowIndex}}"
+        data-col="{{colIndex}}"
+      >
+        <view class="ball" wx:if="{{cell.color}}" style="background-color: {{cell.color}}"></view>
+      </view>
+    </view>
+  </view>
+
+  <view class="game-controls">
+    <button class="control-btn" bindtap="pauseGame">暂停</button>
+    <button class="control-btn" bindtap="backToMenu">返回主菜单</button>
+  </view>
+</view> 
