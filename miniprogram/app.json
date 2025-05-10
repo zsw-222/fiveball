@@ -3,6 +3,7 @@
     "pages/index/index",
     "pages/game/game",
     "pages/gameover/gameover",
+    "pages/settings/settings",
     "pages/logs/logs"
   ],
   "window": {

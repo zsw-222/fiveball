@@ -58,8 +58,18 @@ Page({
       grid.push(row);
     }
 
-    // 初始化可用颜色（开始只有3种）
-    const availableColors: string[] = this.data.ballColors.slice(0, 3);
+    // 根据难度设置确定颜色数量
+    const difficulty = wx.getStorageSync('gameDifficulty') || 'easy';
+    let colorCount = 3; // 默认简单模式，3种颜色
+    
+    if (difficulty === 'medium') {
+      colorCount = 4;
+    } else if (difficulty === 'hard') {
+      colorCount = 5;
+    }
+    
+    // 初始化可用颜色
+    const availableColors: string[] = this.data.ballColors.slice(0, colorCount);
 
     // 随机生成初始的5个球
     const initialBalls = this.generateRandomBalls(5, grid, availableColors);
@@ -251,10 +261,10 @@ Page({
     this.setData({
       showMovingAnimation: true,
       movingBall: {
-        fromX: path[0].x + 1.7, // 起点坐标，向下增加7个网格距离
-        fromY: path[0].y + 0.9, // 起点坐标，向右增加1个网格距离
-        toX: path[0].x + 1.7,
-        toY: path[0].y + 0.9,
+        fromX: path[0].x+2.15,
+        fromY: path[0].y+1.4,
+        toX: path[0].x+2.15,
+        toY: path[0].y+1.4,
         color: ballColor
       }
     });
@@ -267,10 +277,10 @@ Page({
         // 设置移动动画到下一个点
         this.setData({
           movingBall: {
-            fromX: pathPoints[currentStepIndex].x + 1.7, // 向下偏移7格
-            fromY: pathPoints[currentStepIndex].y + 0.9, // 向右偏移1格
-            toX: pathPoints[currentStepIndex].x + 1.7,
-            toY: pathPoints[currentStepIndex].y + 0.9,
+            fromX: pathPoints[currentStepIndex].x+2.15,
+            fromY: pathPoints[currentStepIndex].y+1.4,
+            toX: pathPoints[currentStepIndex].x+2.15,
+            toY: pathPoints[currentStepIndex].y+1.4,
             color: ballColor
           }
         });

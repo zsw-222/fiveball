@@ -1,0 +1,33 @@
+<view class="container">
+  <view class="title">游戏设置</view>
+  
+  <view class="settings-section">
+    <view class="section-title">难度设置</view>
+    <view class="difficulty-container">
+      <view class="difficulty-option {{difficulty === 'easy' ? 'selected' : ''}}" bindtap="selectDifficulty" data-level="easy">
+        <view class="option-title">容易</view>
+        <view class="option-description">3种颜色球</view>
+      </view>
+      <view class="difficulty-option {{difficulty === 'medium' ? 'selected' : ''}}" bindtap="selectDifficulty" data-level="medium">
+        <view class="option-title">中等</view>
+        <view class="option-description">4种颜色球</view>
+      </view>
+      <view class="difficulty-option {{difficulty === 'hard' ? 'selected' : ''}}" bindtap="selectDifficulty" data-level="hard">
+        <view class="option-title">困难</view>
+        <view class="option-description">5种颜色球</view>
+      </view>
+    </view>
+  </view>
+
+  <view class="color-preview">
+    <text class="preview-title">颜色预览</text>
+    <view class="balls-preview">
+      <view wx:for="{{colorPreview}}" wx:key="index" class="preview-ball" style="background-color: {{item}}"></view>
+    </view>
+  </view>
+
+  <view class="btn-container">
+    <button class="btn save-btn" bindtap="saveSettings">保存设置</button>
+    <button class="btn cancel-btn" bindtap="cancel">返回</button>
+  </view>
+</view> 

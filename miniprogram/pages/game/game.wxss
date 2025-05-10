@@ -61,6 +61,12 @@
   height: 40rpx;
   border-radius: 50%;
   margin: 0 10rpx;
+  box-shadow: inset -2rpx -2rpx 4rpx rgba(0, 0, 0, 0.4), 
+              inset 2rpx 2rpx 6rpx rgba(255, 255, 255, 0.5), 
+              1rpx 2rpx 5rpx rgba(0, 0, 0, 0.3);
+  background-image: linear-gradient(135deg, rgba(255, 255, 255, 0.6) 0%, 
+                                  rgba(255, 255, 255, 0.2) 30%, 
+                                  rgba(0, 0, 0, 0.1) 100%);
 }
 
 .game-grid {
@@ -98,6 +104,12 @@
   height: 80%;
   border-radius: 50%;
   transition: transform 0.3s;
+  box-shadow: inset -3rpx -3rpx 6rpx rgba(0, 0, 0, 0.4), 
+              inset 3rpx 3rpx 10rpx rgba(255, 255, 255, 0.5), 
+              2rpx 4rpx 8rpx rgba(0, 0, 0, 0.3);
+  background-image: linear-gradient(135deg, rgba(255, 255, 255, 0.6) 0%, 
+                                  rgba(255, 255, 255, 0.2) 30%, 
+                                  rgba(0, 0, 0, 0.1) 100%);
 }
 
 .ball.bouncing {
@@ -128,12 +140,18 @@
 
 .moving-ball {
   position: absolute;
-  width: 51rpx;
-  height: 51rpx;
+  width: 48rpx;
+  height: 48rpx;
   border-radius: 50%;
   transition: all 0.3s ease;
   z-index: 100;
   transform: translate(-50%, -50%);
+  box-shadow: inset -3rpx -3rpx 6rpx rgba(0, 0, 0, 0.4), 
+              inset 3rpx 3rpx 10rpx rgba(255, 255, 255, 0.5), 
+              2rpx 4rpx 8rpx rgba(0, 0, 0, 0.3);
+  background-image: linear-gradient(135deg, rgba(255, 255, 255, 0.6) 0%, 
+                                  rgba(255, 255, 255, 0.2) 30%, 
+                                  rgba(0, 0, 0, 0.1) 100%);
 }
 
 .path-blocked-msg {

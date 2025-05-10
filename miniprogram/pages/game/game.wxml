@@ -37,7 +37,7 @@
   <view class="moving-ball-container" wx:if="{{showMovingAnimation}}">
     <view 
       class="moving-ball" 
-      style="top: {{movingBall.fromX * 64 + 32}}rpx; left: {{movingBall.fromY * 64 + 32}}rpx; background-color: {{movingBall.color}}; transform: translate(-50%, -50%);"
+      style="top: {{(movingBall.fromX) * 64}}rpx; left: {{(movingBall.fromY) * 64}}rpx; background-color: {{movingBall.color}}; transform: translate(-25%, -25%);"
     ></view>
   </view>
 
@@ -47,7 +47,7 @@
       class="path-indicator" 
       wx:for="{{pathIndicators}}" 
       wx:key="index"
-      style="top: {{(item.x + 1.7) * 64 + 32}}rpx; left: {{(item.y + 0.9) * 64 + 32}}rpx;"
+      style="top: {{(item.x+2.15) * 64}}rpx; left: {{(item.y+1.4) * 64}}rpx;"
     ></view>
   </view>
 

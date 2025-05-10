@@ -59,9 +59,8 @@ Component({
     
     // 设置按钮
     openSettings() {
-      wx.showToast({
-        title: '设置功能开发中',
-        icon: 'none'
+      wx.navigateTo({
+        url: '../settings/settings'
       })
     },
     
